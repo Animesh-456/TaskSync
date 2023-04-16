@@ -1,13 +1,10 @@
 import register from '../assets/register.svg'
-import { VscEye } from "react-icons/vsc"
-import { VscEyeClosed } from "react-icons/md"
 import { useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import common from '../helpers/common'
 import { Outlet, Link } from "react-router-dom";
 import add from "../controller/employee/reg"
-import Joi from 'joi';
 import { regschema } from '../validation/emp/empschema';
 
 const Reg = () => {
