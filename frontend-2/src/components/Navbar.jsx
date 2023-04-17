@@ -30,7 +30,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center w-full h-20 px-4 text-black bg-gray-50 fixed z-20">
             <div>
                 <a href="/">
-                <h1 className="font-bold text-4xl ml-10 text-red-500">TaskSync</h1>
+                <h1 className="font-bold text-4xl ml-10 text-gray-600"><a href="/"><span className="text-red-500">T</span>ask<span className="text-red-500">S</span>ync</a></h1>
                 </a>
             </div>
             <ul className="items-center hidden md:flex">

@@ -20,7 +20,9 @@ const Home = () => {
                         <div>
                             <h2 className='mt-20 text-4xl sm:text-5xl font-bold text-black'>
                                 {/* <TypingAnimation text="Hi, I am Animesh, Full Stack Developer" speed={100} /> */}
-                                Efficiently Manage Your Team's Tasks with <span className='text-red-500'>TaskSync</span>
+                                Efficiently Manage Your Team's Tasks with 
+                                <br />
+                                <span className='text-gray-700'><a href="/"><span className="text-red-500">T</span>ask<span className="text-red-500">S</span>ync</a></span>
                             </h2>
                             <p className='text-black py-4 max-w-md'>
                                 Our task assigner web application simplifies task management by helping you assign, track, and organize your team's tasks in one centralized location.
