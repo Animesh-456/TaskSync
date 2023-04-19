@@ -132,7 +132,7 @@ export default function Dash() {
                 </div>
 
 
-                <div className="container mx-auto mt-20 px-20 pt-20" hidden={homestate} style={{ transition: 'all 2s ease-in', opacity: 1 }}>
+                <div className="container mx-auto mt-20 px-20 pt-20" hidden={homestate}>
                     <div className="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-3">
                         <div className="w-full px-4 py-5 bg-white rounded-lg shadow">
                             <div className="text-sm font-medium text-gray-500 truncate">

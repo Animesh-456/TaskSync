@@ -26,11 +26,15 @@ const Navbar = () => {
         },
 
     ];
+
+    const redirectLogin = () => {
+        window.location.href = "/login"
+    }
     return (
         <div className="flex justify-between items-center w-full h-20 px-4 text-black bg-gray-50 fixed z-20">
             <div>
                 <a href="/">
-                <h1 className="font-bold text-4xl ml-10 text-gray-600"><a href="/"><span className="text-red-500">T</span>ask<span className="text-red-500">S</span>ync</a></h1>
+                    <h1 className="font-bold text-4xl ml-10 text-gray-600"><a href="/"><span className="text-red-500">T</span>ask<span className="text-red-500">S</span>ync</a></h1>
                 </a>
             </div>
             <ul className="items-center hidden md:flex">
@@ -49,17 +53,15 @@ const Navbar = () => {
                     </li>
                 ))}
                 <div>
-                    <Link
-                        to="project"
-                        smooth
-
+                    <a
+                        onClick={redirectLogin}
                         className="cursor-pointer group text-red-500 w-fit h-10 px-6 py-3 my-2 ml-10 flex items-center ring-1 duration-500 ring-red-500 rounded-md hover:bg-red-500 hover:text-white"
                     >
                         Login
                         <span className="">
                             <MdLogin size={25} className="ml-1" />
                         </span>
-                    </Link>
+                    </a>
                 </div>
             </ul>
 
@@ -90,9 +92,8 @@ const Navbar = () => {
                     <br />
 
                     <div>
-                        <Link
-                            to="project"
-                            smooth
+                        <a
+                             onClick={redirectLogin}
 
                             className="cursor-pointer group text-red-500 w-fit h-10 px-6 py-3 my-2 ml-auto flex items-center ring-1 duration-500 ring-red-500 rounded-md hover:bg-bg-gradient-to-r from-red-400 to-red-500 hover:text-white"
                         >
@@ -100,7 +101,7 @@ const Navbar = () => {
                             <span className="">
                                 <MdLogin size={25} className="ml-1" />
                             </span>
-                        </Link>
+                        </a>
                     </div>
                 </ul>
             )}

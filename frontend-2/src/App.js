@@ -4,6 +4,7 @@ import Home from './components/Home';
 import Navbar from './components/Navbar';
 import Reg from './components/Reg';
 import Dash from './components/Dash';
+import Login from './components/Login';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/register' element={<Reg />} />
           <Route path='/dash' element={<Dash />} />
+          <Route path='/login' element={<Login />} />
           {/* <Route exact path='/register' element={<Register/>}/> */}
         </Routes>
       </Router>

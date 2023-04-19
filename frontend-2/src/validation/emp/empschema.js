@@ -9,3 +9,9 @@ export const regschema = Joi.object(
     }
 )
 
+export const loginschema = Joi.object({
+    email: Joi.string().required(),
+    password: Joi.string().required(),
+    account_type: Joi.required()
+})
+

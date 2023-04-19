@@ -1,6 +1,6 @@
 import employee from '../schema/employee-schema.js';
 import bcrypt from 'bcrypt'
-export const addemployee = async (emp) => {
+const addemployee = async (emp) => {
     let data = {
         fname: emp.fname,
         lname: emp.lname,
@@ -14,6 +14,26 @@ export const addemployee = async (emp) => {
         await newEmployee.save();
         return newEmployee
     });
-
-    //console.log("password after hash", data.password)
 }
+
+const loginemployee = async (emp) => {
+    let data = {
+        email: emp.email,
+        password: emp.password
+    }
+    const usr = await employee.findOne({
+        email: data.email
+    })
+
+    if (!usr) {
+        return
+    }
+
+    bcrypt.compare(data.password, usr.password, function (err, result) {
+        if (result == true) {
+            return result
+        }
+    });
+}
+
+export default { addemployee, loginemployee }
