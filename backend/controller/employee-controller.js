@@ -1,6 +1,8 @@
+import { model } from 'mongoose';
 import employee from '../schema/employee-schema.js';
 import bcrypt from 'bcrypt'
 const addemployee = async (emp) => {
+    let newEmployee = null;
     let data = {
         fname: emp.fname,
         lname: emp.lname,
@@ -8,12 +10,12 @@ const addemployee = async (emp) => {
         account_type: emp.account_type,
         password: ""
     }
-    bcrypt.hash(emp.password, 10).then(async function (hash) {
+    await bcrypt.hash(emp.password, 10).then(async function (hash) {
         data.password = hash
-        const newEmployee = new employee(data);
+        newEmployee = new employee(data);
         await newEmployee.save();
-        return newEmployee
     });
+    return newEmployee
 }
 
 const loginemployee = async (emp) => {
@@ -21,19 +23,14 @@ const loginemployee = async (emp) => {
         email: emp.email,
         password: emp.password
     }
-    const usr = await employee.findOne({
-        email: data.email
-    })
-
-    if (!usr) {
-        return
-    }
-
-    bcrypt.compare(data.password, usr.password, function (err, result) {
-        if (result == true) {
-            return result
-        }
-    });
+    const usr = await employee.findOne({ email: data.email })
+    let resp = await bcrypt.compare(data.password, usr.password)
+    return { resp, usr }
 }
 
-export default { addemployee, loginemployee }
+const empcontroller = {
+    addemployee,
+    loginemployee
+}
+
+export default empcontroller
