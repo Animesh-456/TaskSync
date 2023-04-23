@@ -31,10 +31,12 @@ const Login = () => {
             return
         }
         login(user).then(response => {
-           //console.log(response)
-           //toast.success("Logged in ")
-            //window.location.href = '/dash'
-            console.log("jksh", response)
+            if (response.toString() == "true") {
+                toast.success("Logged in!")
+                window.location.href = "/dash"
+            } else {
+                toast.error("Invalid Email or Password")
+            }
         }).catch(error => {
             toast.error(error)
         })
@@ -56,7 +58,7 @@ const Login = () => {
                         <div class="w-full lg:w-1/2 py-16 px-12">
                             <h2 class="text-4xl mb-4 font-medium text-gray-700"> <span className='text-red-500'>TaskSync</span> Login</h2>
                             <p class="mb-4">
-                                Log in to your profile
+                                Get Started with TaskSync - Sign In
                             </p>
                             <form action="#">
 
