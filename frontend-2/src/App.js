@@ -6,6 +6,7 @@ import Reg from './components/Reg';
 import Dash from './components/Dash';
 import Login from './components/Login';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import ProtectedRoutes from './components/ProtectedRoutes';
 
 function App() {
   return (
@@ -26,7 +27,9 @@ function App() {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/register' element={<Reg />} />
-          <Route path='/dash' element={<Dash />} />
+          <Route element={<ProtectedRoutes />}>
+            <Route path='/dash' element={<Dash />} />
+          </Route>
           <Route path='/login' element={<Login />} />
           {/* <Route exact path='/register' element={<Register/>}/> */}
         </Routes>
