@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { Link } from "react-scroll";
 import { MdLogin } from "react-icons/md"
+import maleavatar from '../assets/male-avatar.svg'
 
 const Navbar = () => {
 
     const [nav, setNav] = useState(false);
+    const local = localStorage.getItem("empdetails")
 
     const links = [
         {
@@ -52,17 +54,25 @@ const Navbar = () => {
                         </Link>
                     </li>
                 ))}
-                <div>
-                    <a
-                        onClick={redirectLogin}
-                        className="cursor-pointer group text-red-500 w-fit h-10 px-6 py-3 my-2 ml-10 flex items-center ring-1 duration-500 ring-red-500 rounded-md hover:bg-red-500 hover:text-white"
-                    >
-                        Login
-                        <span className="">
-                            <MdLogin size={25} className="ml-1" />
-                        </span>
-                    </a>
-                </div>
+                {local != null ? (
+                    <a href="/EditProfile"> <img
+                        className=" cursor-pointer h-10 w-10 rounded-full object-cover hover:h-20 hover:w-20 duration-150"
+                        src={maleavatar}
+                        alt="Avatar"
+                    /></a>
+                ) : (
+                    <div>
+                        <a
+                            onClick={redirectLogin}
+                            className="cursor-pointer group text-red-500 w-fit h-10 px-6 py-3 my-2 ml-10 flex items-center ring-1 duration-500 ring-red-500 rounded-md hover:bg-red-500 hover:text-white"
+                        >
+                            Login
+                            <span className="">
+                                <MdLogin size={25} className="ml-1" />
+                            </span>
+                        </a>
+                    </div>
+                )}
             </ul>
 
             <div
@@ -93,7 +103,7 @@ const Navbar = () => {
 
                     <div>
                         <a
-                             onClick={redirectLogin}
+                            onClick={redirectLogin}
 
                             className="cursor-pointer group text-red-500 w-fit h-10 px-6 py-3 my-2 ml-auto flex items-center ring-1 duration-500 ring-red-500 rounded-md hover:bg-bg-gradient-to-r from-red-400 to-red-500 hover:text-white"
                         >

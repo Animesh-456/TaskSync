@@ -13,7 +13,18 @@ export const viewTasks = (userId, status) => {
     const userdata = localStorage.getItem('empdetails');
     const token = JSON.parse(userdata);
     axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token.token}`;
-    let resp = axiosInstance.get(`/task/viewtasks`, { params: { id: userId, status: status  } });
+    let resp = axiosInstance.get(`/task/viewtasks`, { params: { id: userId, status: status } });
     return resp
 };
+
+
+export const recentTasks = (userId) => {
+    const userdata = localStorage.getItem('empdetails');
+    const token = JSON.parse(userdata);
+    axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token.token}`;
+    let resp = axiosInstance.get(`/task/recent-tasks`, { params: { id: userId } });
+    return resp
+};
+
+
 

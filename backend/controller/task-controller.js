@@ -17,12 +17,20 @@ const addtask = async (tk) => {
 
 
 const viewtask = async (userid, status) => {
-    let tasks = await task.find().populate({
+    let tasks = await task.find({ status: status, assignedTo: userid }).sort({createdAt: -1}).populate({
         path: 'assignedTo assignedBy',
         select: 'fname lname email account_type',
-        assignedTo: userid,
-        status: status
     })
+    console.log("controller task", tasks)
+    return tasks
+}
+
+const recent_task = async (userid) => {
+    let tasks = await task.find({ assignedTo: userid }).sort({createdAt: -1}).limit(10).populate({
+        path: 'assignedTo assignedBy',
+        select: 'fname lname email account_type',
+    })
+    console.log("controller task", tasks)
     return tasks
 }
 
@@ -65,7 +73,8 @@ const taskcontroller = {
     viewstaskByid,
     updatetask,
     deletetask,
-    assigntask
+    assigntask,
+    recent_task
 }
 
 

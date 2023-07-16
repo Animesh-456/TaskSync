@@ -1,36 +1,34 @@
-import React, { useState, Fragment, useRef, useEffect, } from "react";
-import register from '../assets/register.svg'
+import React, { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import common from '../helpers/common'
-import { Outlet, Link } from "react-router-dom";
-import { AiFillHome } from "react-icons/ai"
-import { BsListTask } from "react-icons/bs"
-import { AiFillEdit } from "react-icons/ai"
-import { BiLogOut } from "react-icons/bi"
-import { Dialog, Transition } from '@headlessui/react'
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
-import { CheckCircleIcon } from '@heroicons/react/24/outline'
-import Navbar from "./Navbar";
-import auth from "../api/auth";
-import updateemployee from "../controller/employee/empdetails";
-
 import { getUser } from '../api/endpoints'
+const EditProfile = () => {
+    const [empdetails, setempdetails] = useState([]);
+    useEffect(() => {
+        const userdata = localStorage.getItem('empdetails');
+        const token = JSON.parse(userdata);
+        // auth(token).then(resp => {
+        //     console.log("resp", resp)
+        //     setempdetails(resp)
+        // })
 
-export default function Editprof() {
-    const [user, setuser] = useState([])
+        getUser(token).then(d => {
+            if (d.status == 500) {
+                localStorage.removeItem("empdetails")
+                window.location.href = "/login"
+            }
+            console.log("data is ", d.status)
+            setempdetails(d.data)
 
-    const [check, setcheck] = useState(false)
-
-    const setprofile = common(setuser)
+        }).catch(error => {
+            toast.error(error)
+        })
+    }, [])
 
     const handelsubmit = () => {
-        updateemployee(user).then(resp => {
-            // editmodalshow()
-        }).catch(error => {
-            console.log(error)
-        })
+
     }
+
+
     return (
         <div class="container mt-5">
             <div class="w-full lg:w-1/2 py-16 px-12 mx-auto">
@@ -42,11 +40,11 @@ export default function Editprof() {
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label htmlFor="Fname" className='px-2 font-medium'>First Name</label>
-                            <input type="text" placeholder="Firstname" value={user.fname} onChange={setprofile("fname")} class="border border-gray-400 py-3 px-5 rounded-md" />
+                            <input type="text" placeholder="Firstname" value={empdetails.fname} class="border border-gray-400 py-3 px-5 rounded-md" />
                         </div>
                         <div>
                             <label htmlFor="Lname" className='px-2 font-medium'>Last Name</label>
-                            <input type="text" placeholder="Surname" value={user.lname} onChange={setprofile("lname")} class="border border-gray-400 py-3 px-5 rounded-md" />
+                            <input type="text" placeholder="Surname" value={empdetails.lname} class="border border-gray-400 py-3 px-5 rounded-md" />
                         </div>
                     </div>
                     <div class="mt-5">
@@ -77,3 +75,4 @@ export default function Editprof() {
     )
 }
 
+export default EditProfile

@@ -7,20 +7,21 @@ import { Outlet, Link } from "react-router-dom";
 import { AiFillHome } from "react-icons/ai"
 import { BsListTask } from "react-icons/bs"
 import { AiFillEdit } from "react-icons/ai"
-import { BiLogOut } from "react-icons/bi"
+import { BiBold, BiLogOut } from "react-icons/bi"
 import { Dialog, Transition } from '@headlessui/react'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { CheckCircleIcon } from '@heroicons/react/24/outline'
 import Navbar from "./Navbar";
-import Editprof from "./Editprof";
-import auth from "../api/auth";
+
 import updateemployee from "../controller/employee/empdetails";
-import { getUser } from '../api/endpoints'
+import { getUser, recentTasks } from '../api/endpoints'
 import Tasks from "./Tasks";
+
 
 export default function Dash() {
 
     const [empdetails, setempdetails] = useState([]);
+    const [recenttasks, setrecenttasks] = useState([]);
 
 
     useEffect(() => {
@@ -38,12 +39,16 @@ export default function Dash() {
             }
             console.log("data is ", d.status)
             setempdetails(d.data)
-            let obj = {
-                fname: `${String(d.data.fname)}`,
-                lname: `${String(d.data.lname)}`,
-                description: ''
+
+        }).catch(error => {
+            toast.error(error)
+        })
+
+
+        recentTasks(token.id).then(d => {
+            if (d.status == 201) {
+                setrecenttasks(d.data)
             }
-            localStorage.setItem("edit", JSON.stringify(obj))
         }).catch(error => {
             toast.error(error)
         })
@@ -53,23 +58,19 @@ export default function Dash() {
     const employee = localStorage.getItem("empdetails")
     const emp = JSON.parse(employee)
     const [homestate, sethomestate] = useState(true)
-    const [editstate, seteditstate] = useState(false)
     const [taskstate, settaskstate] = useState(false)
     const changehomestate = () => {
         sethomestate(true)
-        seteditstate(false)
         settaskstate(false)
     }
 
     const changeeditstate = () => {
         sethomestate(false)
-        seteditstate(true)
         settaskstate(false)
     }
 
     const changetaskstate = () => {
         settaskstate(true)
-        seteditstate(false)
         sethomestate(false)
     }
 
@@ -123,6 +124,10 @@ export default function Dash() {
 
     console.log("Local str")
 
+
+
+
+
     return (
         <>
             <div className="flex">
@@ -153,7 +158,7 @@ export default function Dash() {
                                         <span>My Tasks</span>
                                     </a>
                                 </li>
-                                <li className="mt-10 pt-5 hover:text-red-500">
+                                {/* <li className="mt-10 pt-5 hover:text-red-500">
                                     <a
                                         style={{ cursor: "pointer" }}
                                         className="flex items-center p-2 space-x-3 rounded-md"
@@ -162,7 +167,7 @@ export default function Dash() {
                                         <AiFillEdit size={20} className="ml-1" />
                                         <span>Edit Profile</span>
                                     </a>
-                                </li>
+                                </li> */}
 
                                 <li className="mt-10 pt-5 hover:text-red-500">
                                     <a
@@ -183,11 +188,8 @@ export default function Dash() {
 
                 {homestate ? (
                     <div className="container mx-auto mt-20 px-20 pt-20">
-
-
+                        <h1 className="text-2xl font-bold mb-4">Account Details</h1>
                         <div className="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-3">
-
-
                             <div className="w-full px-4 py-5 bg-white rounded-lg shadow">
                                 <div className="text-sm font-medium text-gray-500 truncate">
                                     My Name
@@ -213,12 +215,30 @@ export default function Dash() {
                                 </div>
                             </div>
                         </div>
+
+                        <h1 className="text-2xl font-bold mb-4">Recent Activity</h1>
+                        <div className="bg-white p-4 rounded shadow">
+                            {/* <h2 className="text-xl font-bold mb-4">Task List</h2> */}
+                            {recenttasks.length > 0 ? (
+                                <ul className="space-y-4">
+                                    {recenttasks.length && recenttasks.map((task) => (
+                                        <li
+                                            key={task.id}
+                                            className="flex items-center justify-between rounded"
+                                        >
+                                            <span className="font-bold">{task.title}</span>
+                                            <span>{task.description}</span>
+                                            <span>{task.createdAt}</span>
+                                        </li>
+                                    )).slice(0, 3)}
+                                </ul>
+                            ) : (
+                                <p className="text-gray-500">No tasks found.</p>
+                            )}
+                        </div>
                     </div>
                 ) : (<></>)}
 
-
-
-                {editstate ? <Editprof /> : <></>}
                 {taskstate ? <Tasks /> : <></>}
 
 

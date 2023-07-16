@@ -7,6 +7,8 @@ import Dash from './components/Dash';
 import Login from './components/Login';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ProtectedRoutes from './components/ProtectedRoutes';
+import ProjectDetails from './components/task/[id].tsx';
+import EditProfile from './components/EditProfile';
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
           <Route path='/register' element={<Reg />} />
           <Route element={<ProtectedRoutes />}>
             <Route path='/dash' element={<Dash />} />
+            <Route path='/task/:id' element={<ProjectDetails />} />
+            <Route path='/EditProfile' element={<EditProfile />} />
           </Route>
           <Route path='/login' element={<Login />} />
           {/* <Route exact path='/register' element={<Register/>}/> */}

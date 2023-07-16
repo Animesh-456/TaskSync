@@ -14,7 +14,19 @@ router.post('/addtask', async (req, res) => {
 })
 
 router.get('/viewtasks', async (req, res) => {
+    console.log("Task status us", req.query.status)
     await taskcontroller.viewtask(req.query.id, req.query.status).then(result => {
+        console.log("Task result us", result)
+        res.status(201).json(result)
+
+    }).catch(error => {
+        res.status(500).json(error)
+    })
+})
+
+router.get('/recent-tasks', async (req, res) => {
+    await taskcontroller.recent_task(req.query.id).then(result => {
+        console.log("Task result us", result)
         res.status(201).json(result)
     }).catch(error => {
         res.status(500).json(error)
