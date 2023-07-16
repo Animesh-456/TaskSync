@@ -6,7 +6,9 @@ const employeeSchema = mongoose.Schema({
     fname: String,
     lname: String,
     email: String,
+    username: String,
     account_type: String,
+    profile_description: String,
     password: String
 });
 
@@ -18,4 +20,5 @@ const employeeSchema = mongoose.Schema({
 
 // export default postUser;
 const employee = new mongoose.model("employee", employeeSchema);
+
 export default employee
