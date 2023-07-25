@@ -30,7 +30,7 @@ export default function Dash() {
         // auth(token).then(resp => {
         //     console.log("resp", resp)
         //     setempdetails(resp)
-        // })
+        // })   
 
         getUser(token).then(d => {
             if (d.status == 500) {
@@ -105,8 +105,8 @@ export default function Dash() {
     const confirmlogout = () => {
         setOpen(false)
         toast.success("Logged out!")
-        localStorage.removeItem("empdetails")
         window.location.href = "/"
+        localStorage.removeItem("empdetails")
     }
 
     const [openeditmodal, setopeneditmodal] = useState(false)
