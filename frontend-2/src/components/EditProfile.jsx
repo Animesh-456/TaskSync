@@ -3,34 +3,61 @@ import { ToastContainer, toast } from 'react-toastify';
 import { getUser } from '../api/endpoints'
 import maleavatar from '../assets/male-avatar.svg'
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
-const EditProfile = () => {
-    const [empdetails, setempdetails] = useState([]);
+import common from '../helpers/common'
+import { updateemployee } from '../api/endpoints';
+const EditProfile = ({ userProfile }) => {
+    const [profileData, setProfileData] = useState(null);
+
+    const userdata = localStorage.getItem('empdetails');
+    const token = JSON.parse(userdata);
+
     useEffect(() => {
-        const userdata = localStorage.getItem('empdetails');
-        const token = JSON.parse(userdata);
-        // auth(token).then(resp => {
-        //     console.log("resp", resp)
-        //     setempdetails(resp)
-        // })
 
-        getUser(token).then(d => {
-            if (d.status == 500) {
-                localStorage.removeItem("empdetails")
-                window.location.href = "/login"
+        getUser(token)
+            .then(d => {
+                if (d.status == 500) {
+                    localStorage.removeItem("empdetails")
+                    window.location.href = "/login"
+                }
+                console.log("data is ", d.status)
+                //setProfileData(d.data)
+                //setFormData(d.data);
+                localStorage.setItem("usereditprofile", JSON.stringify(d.data))
+            }).catch(error => {
+                toast.error(error)
+            })
+    }, [])
+
+    const handleSubmit = () => {
+
+        updateemployee(formData).then(d => {
+            if (d.status == 201) {
+                toast.success("Profile Updated!");
+                localStorage.setItem("usereditprofile", JSON.stringify(d.data))
+            } else {
+                toast.error("Error Occured!");
             }
-            console.log("data is ", d.status)
-            setempdetails(d.data)
-
         }).catch(error => {
             toast.error(error)
         })
-    }, [])
-
-    const [empname, setempname] = useState(empdetails?.name)
-
-    const handleSubmit = () => {
-        setempname()
     }
+
+
+
+
+    let editstate = JSON.parse(localStorage.getItem("usereditprofile"))
+
+    const [formData, setFormData] = useState({
+        fname: editstate?.fname,
+        lname: editstate?.lname,
+        email: editstate?.email,
+        description: editstate?.description || ""
+    });
+
+    const setprofile = common(setFormData)
+
+
+    console.log("For rdit profile console", formData)
 
 
 
@@ -139,7 +166,7 @@ const EditProfile = () => {
 
     return (
         <div class='flex items-center justify-center mx-auto mt-10'>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <div className="space-y-8">
                     <div class="flex items-center justify-center">
                         <img src={maleavatar} alt="male avatar" class="w-20 h-20" />
@@ -156,8 +183,9 @@ const EditProfile = () => {
                                 </label>
                                 <div className="mt-2">
                                     <input
-                                        value={empdetails?.fname}
-                                        onChange={handleSubmit}
+                                        name='fname'
+                                        value={formData?.fname}
+                                        onChange={setprofile('fname')}
                                         className="px-5 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-600 sm:text-sm sm:leading-6"
                                     />
                                 </div>
@@ -169,7 +197,8 @@ const EditProfile = () => {
                                 </label>
                                 <div className="mt-2">
                                     <input
-                                        value={empdetails?.lname}
+                                        value={formData?.lname}
+                                        onChange={setprofile('lname')}
                                         className="px-5 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-600 sm:text-sm sm:leading-6"
                                     />
                                 </div>
@@ -181,7 +210,7 @@ const EditProfile = () => {
                                 </label>
                                 <div className="mt-2">
                                     <input
-                                        value={empdetails?.email}
+                                        value={formData?.email}
                                         disabled='true'
                                         className="px-5 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-600 sm:text-sm sm:leading-6"
                                     />
@@ -277,6 +306,8 @@ const EditProfile = () => {
                                         id="street-address"
                                         autoComplete="street-address"
                                         rows={5}
+                                        value={formData?.description}
+                                        onChange={setprofile('description')}
                                         className="px-5 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-600 sm:text-sm sm:leading-6"
                                     />
                                 </div>
@@ -288,7 +319,7 @@ const EditProfile = () => {
                 </div>
 
                 <div className="mt-6 flex items-center justify-end gap-x-6">
-                    <a href= '/dash' type="button" className="text-sm font-semibold leading-6 text-blue-900">
+                    <a href='/dash' type="button" className="text-sm font-semibold leading-6 text-blue-900">
                         Cancel
                     </a>
                     <button

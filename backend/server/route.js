@@ -43,6 +43,7 @@ router.get('/getempdetails', empauth, async (req, res) => {
             fname: `${String(user.fname)}`,
             lname: `${String(user.lname)}`,
             email: `${String(user.email)}`,
+            description: `${String(user.description)}`,
             account_type: `${String(user.account_type)}`,
         }
         res.status(200).json(obj)

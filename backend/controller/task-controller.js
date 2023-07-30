@@ -3,6 +3,7 @@ import task from '../schema/task-chema.js';
 import sendmail from '../helpers/mail.js';
 import updateTask from '../helpers/globalmail/update-task.js';
 import assignTask from '../helpers/globalmail/asssign-task.js'
+import markDone from '../helpers/globalmail/mark-done.js';
 
 const addtask = async (tk) => {
     let data = {
@@ -17,7 +18,7 @@ const addtask = async (tk) => {
 
 
 const viewtask = async (userid, status) => {
-    let tasks = await task.find({ status: status, assignedTo: userid }).sort({createdAt: -1}).populate({
+    let tasks = await task.find({ status: status, assignedTo: userid }).sort({ createdAt: -1 }).populate({
         path: 'assignedTo assignedBy',
         select: 'fname lname email account_type',
     })
@@ -26,7 +27,7 @@ const viewtask = async (userid, status) => {
 }
 
 const recent_task = async (userid) => {
-    let tasks = await task.find({ assignedTo: userid }).sort({createdAt: -1}).limit(10).populate({
+    let tasks = await task.find({ assignedTo: userid }).sort({ createdAt: -1 }).limit(10).populate({
         path: 'assignedTo assignedBy',
         select: 'fname lname email account_type',
     })
@@ -46,6 +47,18 @@ const updatetask = async (tk) => {
     let result = await task.findByIdAndUpdate({ _id: tk.id }, { title: tk.title, description: tk.description }, { new: true })
     let mailtosend = await employee.findOne({ _id: result.assignedTo })
     let mail = updateTask(mailtosend.fname, result._id, result.title, result.description)
+    const subject = mail.subject
+    const text2 = mail.body
+    sendmail(mailtosend.email, subject, text2)
+    return result
+}
+
+const markdone = async (tk) => {
+    let result = await task.findByIdAndUpdate({ _id: tk.params }, { status: 'complete' }, { new: true })
+    let mailtosend = await employee.findOne({ _id: result.assignedBy })
+    let empname = await employee.findOne({ _id: result.assignedTo })
+    console.log(empname.fname)
+    let mail = markDone(mailtosend.fname, result._id, result.title, result.description, empname.fname)
     const subject = mail.subject
     const text2 = mail.body
     sendmail(mailtosend.email, subject, text2)
@@ -74,7 +87,8 @@ const taskcontroller = {
     updatetask,
     deletetask,
     assigntask,
-    recent_task
+    recent_task,
+    markdone
 }
 
 

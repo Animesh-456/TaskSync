@@ -63,7 +63,7 @@ const getemployeedetails = async (emp) => {
 }
 
 const updateemployeedetails = async (emp) => {
-    await employee.updateOne({ _id: emp.id, fname: emp.fname, lname: emp.lname })
+    await employee.updateOne({ email: emp.email, fname: emp.fname, lname: emp.lname, description: emp.description })
 }
 
 const empcontroller = {

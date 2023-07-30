@@ -14,7 +14,6 @@ router.post('/addtask', async (req, res) => {
 })
 
 router.get('/viewtasks', async (req, res) => {
-    console.log("Task status us", req.query.status)
     await taskcontroller.viewtask(req.query.id, req.query.status).then(result => {
         console.log("Task result us", result)
         res.status(201).json(result)
@@ -34,6 +33,7 @@ router.get('/recent-tasks', async (req, res) => {
 })
 
 router.get('/viewtaskbyid', async (req, res) => {
+    console.log("task id is",req.query.id)
     await taskcontroller.viewstaskByid(req.query.id).then(result => {
         res.status(201).json(result)
     }).catch(error => {
@@ -43,6 +43,17 @@ router.get('/viewtaskbyid', async (req, res) => {
 
 router.post('/updatetask', async (req, res) => {
     await taskcontroller.updatetask(req.body).then(result => {
+        console.log(result)
+        res.status(201).json(result)
+    }).catch(error => {
+        res.status(500).json(error)
+    })
+})
+
+
+router.post('/markdone', async (req, res) => {
+    console.log("the id from fr is", req.body)
+    await taskcontroller.markdone(req.body).then(result => {
         console.log(result)
         res.status(201).json(result)
     }).catch(error => {

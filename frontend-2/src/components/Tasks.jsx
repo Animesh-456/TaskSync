@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Fragment, useRef } from 'react'
-import { viewTasks } from '../api/endpoints';
+import { markdone, viewTasks, viewtaskID } from '../api/endpoints';
 import logo from "../assets/logo.svg"
 // import frontendroute from '../common/links';
 // import { Link } from 'react-router-dom';
@@ -7,19 +7,64 @@ import logo from "../assets/logo.svg"
 // import { BsListTask } from "react-icons/bs"
 // import { AiFillEdit } from "react-icons/ai"
 // import { BiBold, BiLogOut } from "react-icons/bi"
-import { Dialog, Transition } from '@headlessui/react'
+//import { Dialog, Transition } from '@headlessui/react'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 // import { CheckCircleIcon } from '@heroicons/react/24/outline'
+import { ToastContainer, toast } from 'react-toastify';
+
+import { Dialog, RadioGroup, Transition } from '@headlessui/react'
+import { XMarkIcon } from '@heroicons/react/24/outline'
+import { StarIcon } from '@heroicons/react/20/solid'
+import { PaperClipIcon } from '@heroicons/react/20/solid'
 
 const Tasks = () => {
 
+
+
+
+    const product = {
+        name: 'Basic Tee 6-Pack ',
+        price: '$192',
+        rating: 3.9,
+        reviewCount: 117,
+        href: '#',
+        imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-quick-preview-02-detail.jpg',
+        imageAlt: 'Two each of gray, white, and black shirts arranged on table.',
+        colors: [
+            { name: 'White', class: 'bg-white', selectedClass: 'ring-gray-400' },
+            { name: 'Gray', class: 'bg-gray-200', selectedClass: 'ring-gray-400' },
+            { name: 'Black', class: 'bg-gray-900', selectedClass: 'ring-gray-900' },
+        ],
+        sizes: [
+            { name: 'XXS', inStock: true },
+            { name: 'XS', inStock: true },
+            { name: 'S', inStock: true },
+            { name: 'M', inStock: true },
+            { name: 'L', inStock: true },
+            { name: 'XL', inStock: true },
+            { name: 'XXL', inStock: true },
+            { name: 'XXXL', inStock: false },
+        ],
+    }
+
+    function classNames(...classes) {
+        return classes.filter(Boolean).join(' ')
+    }
+
+
+    const [open2, setOpen2] = useState(false)
+
+
+    const [selectedColor, setSelectedColor] = useState(product.colors[0])
+    const [selectedSize, setSelectedSize] = useState(product.sizes[2])
+
     const [activeLink, setactivelink] = useState('pending');
     const [task, settask] = useState([])
-
+    const userdata = localStorage.getItem('empdetails');
+    const usr = JSON.parse(userdata);
 
     useEffect(() => {
-        const userdata = localStorage.getItem('empdetails');
-        const usr = JSON.parse(userdata);
+        console.log("Task description,", taskdescription)
         viewTasks(usr.id, activeLink).then(d => {
             settask(d.data)
         }).catch(error => {
@@ -30,12 +75,41 @@ const Tasks = () => {
     console.log("tasks are:- ", task)
 
     const handleconfirm = () => {
-
+        console.log("the task id is", tskid)
+        let tk = tskid
+        markdone(tk).then(resp => {
+            if (resp.status == 201) {
+                toast.success("Task Marked Done!")
+                setOpen(false)
+                viewTasks(usr.id, activeLink).then(d => {
+                    settask(d.data)
+                }).catch(error => {
+                    console.log(error)
+                })
+            } else {
+                toast.error("Error Occured!")
+            }
+        })
     }
 
     const cancelButtonRef = useRef(null)
 
     const [open, setOpen] = useState(false)
+
+
+    const [tskid, settskid] = useState(null);
+    const [taskdescription, settaskdescription] = useState([]);
+
+
+
+    const handleview = async (id) => {
+        await viewtaskID(id).then(d => {
+            if (d.status == 201) {
+                //settaskdescription(null)
+                settaskdescription(d.data)
+            }
+        })
+    }
 
 
     return (
@@ -103,14 +177,14 @@ const Tasks = () => {
                                             <div className="text-sm text-gray-900">{task.title}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-900">{task.status}</div>
+                                            <div className="text-sm font-bold text-yellow-500">{task.status}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <button className="bg-yellow-500 text-white px-4 py-2 mr-2 rounded hover:bg-yellow-600">
+                                            <button onClick={() => { handleview(task?._id); settskid(task._id); setOpen2(true) }} className="bg-yellow-500 text-white px-4 py-2 mr-2 rounded hover:bg-yellow-600">
                                                 Details
                                             </button>
 
-                                            <button onClick={() => setOpen(true)} className="bg-green-500 text-white px-4 py-2 mr-2 rounded hover:bg-green-600">
+                                            <button onClick={() => { settskid(task._id); setOpen(true) }} className="bg-green-500 text-white px-4 py-2 mr-2 rounded hover:bg-green-600">
                                                 Mark as Complete
                                             </button>
 
@@ -156,10 +230,10 @@ const Tasks = () => {
                                             <div className="text-sm text-gray-900">{task.title}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-900">{task.status}</div>
+                                            <div className="text-sm font-bold text-green-500">{task.status}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <button className="bg-yellow-500 text-white px-4 py-2 mr-2 rounded hover:bg-yellow-600">
+                                            <button onClick={() => { handleview(task._id); settskid(task._id); setOpen2(true) }} className="bg-yellow-500 text-white px-4 py-2 mr-2 rounded hover:bg-yellow-600">
                                                 Details
                                             </button>
                                             {/* <Link className="bg-yellow-500 text-white px-4 py-2 mr-2 rounded hover:bg-yellow-600" to={`/task/${task._id}`} >Details</Link> */}
@@ -241,6 +315,120 @@ const Tasks = () => {
                     </div>
                 </Dialog>
             </Transition.Root>
+
+
+
+
+            <Transition.Root show={open2} as={Fragment}>
+                <Dialog as="div" className="relative z-10" onClose={setOpen2}>
+                    <Transition.Child
+                        as={Fragment}
+                        enter="ease-out duration-300"
+                        enterFrom="opacity-0"
+                        enterTo="opacity-100"
+                        leave="ease-in duration-200"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                    >
+                        <div className="fixed inset-0 hidden bg-gray-500 bg-opacity-75 transition-opacity md:block" />
+                    </Transition.Child>
+
+                    <div className="fixed inset-0 z-10 overflow-y-auto mt-20">
+                        <div className="flex min-h-full items-stretch justify-center text-center md:items-center md:px-2 lg:px-4">
+                            <Transition.Child
+                                as={Fragment}
+                                enter="ease-out duration-300"
+                                enterFrom="opacity-0 translate-y-4 md:translate-y-0 md:scale-95"
+                                enterTo="opacity-100 translate-y-0 md:scale-100"
+                                leave="ease-in duration-200"
+                                leaveFrom="opacity-100 translate-y-0 md:scale-100"
+                                leaveTo="opacity-0 translate-y-4 md:translate-y-0 md:scale-95"
+                            >
+                                <Dialog.Panel className="flex w-full transform text-left text-base transition md:my-8 md:max-w-2xl md:px-4 lg:max-w-4xl">
+                                    <div className="relative flex w-full items-center overflow-hidden bg-white px-4 pb-8 pt-14 shadow-2xl sm:px-6 sm:pt-8 md:p-6 lg:p-8">
+                                        <button
+                                            type="button"
+                                            className="absolute right-4 top-4 text-gray-400 hover:text-gray-500 sm:right-6 sm:top-8 md:right-6 md:top-6 lg:right-8 lg:top-8"
+                                            onClick={() => setOpen2(false)}
+                                        >
+                                            <span className="sr-only">Close</span>
+                                            <XMarkIcon className="h-6 w-6 text-red-500" aria-hidden="true" />
+                                        </button>
+
+                                        <div>
+                                            <div className="px-4 sm:px-0">
+                                                <h3 className="text-2xl font-bold leading-7 text-gray-900">{taskdescription[0]?.title}</h3>
+                                                {/* <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">Personal details and application.</p> */}
+                                            </div>
+                                            <div className="mt-6 border-t border-gray-100">
+                                                <dl className="divide-y divide-gray-100">
+
+                                                    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                                        <dt className="text-sm font-medium leading-6 text-gray-900">Task Id</dt>
+                                                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{taskdescription[0]?._id}</dd>
+                                                    </div>
+
+
+                                                    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                                        <dt className="text-sm font-medium leading-6 text-gray-900">Task Name</dt>
+                                                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{taskdescription[0]?.title}</dd>
+                                                    </div>
+                                                    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                                        <dt className="text-sm font-medium leading-6 text-gray-900">Assigned By</dt>
+                                                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{taskdescription[0]?.assignedBy?.fname} {taskdescription[0]?.assignedBy?.lname}</dd>
+                                                    </div>
+
+                                                    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                                        <dt className="text-sm font-medium leading-6 text-gray-900">Assigned To</dt>
+                                                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{taskdescription[0]?.assignedTo?.fname} {taskdescription[0]?.assignedTo?.lname}</dd>
+                                                    </div>
+
+
+                                                    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                                        <dt className="text-sm font-medium leading-6 text-gray-900">Date Created</dt>
+                                                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{taskdescription[0]?.createdAt}</dd>
+                                                    </div>
+
+                                                    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                                        <dt className="text-sm font-medium leading-6 text-gray-900">Remaining Time</dt>
+                                                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">Remaining time not yet updated</dd>
+                                                    </div>
+
+
+                                                    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                                        <dt className="text-sm font-medium leading-6 text-gray-900">Status</dt>
+                                                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{taskdescription[0]?.status}</dd>
+                                                    </div>
+                                                    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                                        <dt className="text-sm font-medium leading-6 text-gray-900">Description</dt>
+                                                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                                            {taskdescription[0]?.description}
+                                                        </dd>
+                                                    </div>
+
+                                                </dl>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Dialog.Panel>
+                            </Transition.Child>
+                        </div>
+                    </div>
+                </Dialog>
+            </Transition.Root>
+
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
 
         </div>
     )
