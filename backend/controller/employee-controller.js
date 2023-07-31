@@ -63,7 +63,14 @@ const getemployeedetails = async (emp) => {
 }
 
 const updateemployeedetails = async (emp) => {
-    await employee.updateOne({ email: emp.email, fname: emp.fname, lname: emp.lname, description: emp.description })
+
+    let obj = {
+        fname: emp.fname,
+        lname: emp.lname,
+        description: emp.description
+    }
+    let result = await employee.updateOne({ email: emp.email }, { $set: obj })
+    return result
 }
 
 const empcontroller = {

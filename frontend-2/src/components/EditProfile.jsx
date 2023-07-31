@@ -5,14 +5,14 @@ import maleavatar from '../assets/male-avatar.svg'
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 import common from '../helpers/common'
 import { updateemployee } from '../api/endpoints';
-const EditProfile = ({ userProfile }) => {
+const EditProfile = () => {
     const [profileData, setProfileData] = useState(null);
 
-    const userdata = localStorage.getItem('empdetails');
-    const token = JSON.parse(userdata);
 
     useEffect(() => {
 
+        const userdata = localStorage.getItem('empdetails');
+        const token = JSON.parse(userdata);
         getUser(token)
             .then(d => {
                 if (d.status == 500) {
@@ -33,7 +33,22 @@ const EditProfile = ({ userProfile }) => {
         updateemployee(formData).then(d => {
             if (d.status == 201) {
                 toast.success("Profile Updated!");
-                localStorage.setItem("usereditprofile", JSON.stringify(d.data))
+                const userdata = localStorage.getItem('empdetails');
+                const token = JSON.parse(userdata);
+                getUser(token)
+                    .then(d => {
+                        if (d.status == 500) {
+                            localStorage.removeItem("empdetails")
+                            window.location.href = "/login"
+                        }
+                        localStorage.setItem("usereditprofile", JSON.stringify(d.data))
+                        setTimeout(() => {
+                            window.location.href='/dash'
+                        }, 1000);
+                    }).catch(error => {
+                        toast.error(error)
+                    })
+
             } else {
                 toast.error("Error Occured!");
             }
@@ -60,113 +75,9 @@ const EditProfile = ({ userProfile }) => {
     console.log("For rdit profile console", formData)
 
 
-
-
-    // return (
-    //     <div class="container">
-    //         <div class="w-full lg:w-1/2 py-16 mt-20 px-12 mx-auto">
-    //             <h2 class="text-4xl mb-4 font-medium text-gray-700"><span className="text-red-500">Edit</span> your Profile</h2>
-    //             <p class="mb-4">
-    //                 Edit you data and click save
-    //             </p>
-    //             <form action="#">
-    //                 <div class="grid grid-cols-2 gap-2">
-    //                     <div>
-    //                         <label htmlFor="Fname" className='px-2 font-medium'>First Name</label>
-    //                         <input type="text" placeholder="Firstname" value={empdetails.fname} class="border border-gray-400 py-3 px-5 rounded-md" />
-    //                     </div>
-    //                     <div>
-    //                         <label htmlFor="Lname" className='px-2 font-medium'>Last Name</label>
-    //                         <input type="text" placeholder="Surname" value={empdetails.lname} class="border border-gray-400 py-3 px-5 rounded-md" />
-    //                     </div>
-    //                 </div>
-    //                 <div class="mt-5">
-    //                     <label htmlFor="Email" className='px-2 font-medium'>Description</label>
-    //                     <textarea class="border border-gray-400 py-3 px-5 w-full rounded-md" name="description" id="" cols="30" rows="5"></textarea>
-    //                     {/* <input type="text" placeholder="Email" value={empdetails.email} onChange={setprofile("email")} class="border border-gray-400 py-3 px-5 w-full rounded-md" /> */}
-    //                 </div>
-
-    //                 <div class="grid grid-cols-2 gap-5 mt-10">
-    //                     <a className="w-full cursor-pointer bg-white py-3 border border-red-500 rounded-md text-center text-red-500 hover:text-white hover:bg-red-500 hover:duration-700 " onClick={handelsubmit}>Save</a>
-
-    //                 </div>
-    //                 <ToastContainer
-    //                     position="top-center"
-    //                     autoClose={5000}
-    //                     hideProgressBar={false}
-    //                     newestOnTop={false}
-    //                     closeOnClick
-    //                     rtl={false}
-    //                     pauseOnFocusLoss
-    //                     draggable
-    //                     pauseOnHover
-    //                     theme="light"
-    //                 />
-    //             </form>
-    //         </div>
-    //     </div>
-    // )
-
-    // return (
-    //     <div className="mt-10 pt-20 bg-red-50 w-1/2 mx-auto rounded-xl">
-    //         <div class="flex items-center justify-center">
-    //             <img src={maleavatar} alt="male avatar" class="w-20 h-20" />
-    //         </div>
-    //         <form className="p-4 max-w-md mx-auto" onSubmit={handleSubmit}>
-    //             <div className="mb-4">
-    //                 <label htmlFor="name" className="block text-gray-700 font-bold mb-2">
-    //                     Name
-    //                 </label>
-    //                 <input
-    //                     type="text"
-    //                     id="name"
-    //                     name="name"
-    //                     value={empdetails.fname}
-    //                     onChange={handleSubmit}
-    //                     className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
-    //                     required
-    //                 />
-    //             </div>
-    //             <div className="mb-4">
-    //                 <label htmlFor="email" className="block text-gray-700 font-bold mb-2">
-    //                     Email
-    //                 </label>
-    //                 <input
-    //                     type="email"
-    //                     id="email"
-    //                     name="email"
-    //                     value={empdetails.email}
-    //                     onChange={handleSubmit}
-    //                     className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
-    //                     required
-    //                 />
-    //             </div>
-    //             <div className="mb-4">
-    //                 <label htmlFor="bio" className="block text-gray-700 font-bold mb-2">
-    //                     Bio
-    //                 </label>
-    //                 <textarea
-    //                     id="bio"
-    //                     name="bio"
-    //                     onChange={handleSubmit}
-    //                     className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
-    //                     rows={4}
-    //                 />
-    //             </div>
-    //             {/* Add other fields as necessary */}
-    //             <button
-    //                 type="submit"
-    //                 className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-    //             >
-    //                 Save Changes
-    //             </button>
-    //         </form>
-    //     </div>
-    // );
-
     return (
         <div class='flex items-center justify-center mx-auto mt-10'>
-            <form onSubmit={handleSubmit}>
+            <form >
                 <div className="space-y-8">
                     <div class="flex items-center justify-center">
                         <img src={maleavatar} alt="male avatar" class="w-20 h-20" />
@@ -322,14 +233,28 @@ const EditProfile = ({ userProfile }) => {
                     <a href='/dash' type="button" className="text-sm font-semibold leading-6 text-blue-900">
                         Cancel
                     </a>
-                    <button
-                        type="submit"
-                        className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                    <a
+                        onClick={handleSubmit}
+                        //type="submit"
+                        className="cursor-pointer rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                     >
                         Save Changes
-                    </button>
+                    </a>
                 </div>
             </form>
+
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
         </div>
     )
 

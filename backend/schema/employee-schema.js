@@ -8,7 +8,7 @@ const employeeSchema = mongoose.Schema({
     email: String,
     username: String,
     account_type: String,
-    profile_description: String,
+    description: String,
     password: String
 });
 

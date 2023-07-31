@@ -53,6 +53,8 @@ router.get('/getempdetails', empauth, async (req, res) => {
 })
 
 router.post('/postemployeedetails', async (req, res) => {
+
+    console.log("body to update", req.body)
     await empcontroller.updateemployeedetails(req.body).then(user => {
         res.status(201).json(user)
     }).catch(error => {
