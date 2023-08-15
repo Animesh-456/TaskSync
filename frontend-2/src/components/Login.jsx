@@ -11,7 +11,7 @@ import login from '../controller/employee/login';
 const Login = () => {
     const [user, setuser] = useState({
         email: "",
-        account_type: "Assigner",
+        //account_type: "Assigner",
         password: "",
     })
 
@@ -67,14 +67,14 @@ const Login = () => {
                                     <input type="text" placeholder="Email" value={user.email} onChange={setprofile("email")} class="border border-gray-400 py-3 px-5 w-full rounded-md" />
                                 </div>
 
-                                <div class="mt-5">
+                                {/* <div class="mt-5">
                                     <label htmlFor="TypeOfAccount" className='px-2 font-medium'>Type of account</label>
                                     <select name="id" value={user.account_type} onChange={setprofile("account_type")} className='border border-gray-400 py-3 px-5 w-full rounded-md'>
                                         <option value="Assigner">Assigner</option>
                                         <option value="Employee">Employee</option>
                                     </select>
 
-                                </div>
+                                </div> */}
                                 <div class="mt-5">
 
                                     <label htmlFor="Password" className='px-2 font-medium'>Password</label>

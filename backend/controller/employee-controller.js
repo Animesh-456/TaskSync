@@ -19,6 +19,7 @@ const addemployee = async (emp) => {
         email: emp.email,
         account_type: emp.account_type,
         username: emp.username,
+        description : "",
         password: ""
     }
     await bcrypt.hash(emp.password, 10).then(async function (hash) {

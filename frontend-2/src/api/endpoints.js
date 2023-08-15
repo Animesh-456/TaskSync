@@ -46,3 +46,8 @@ export const updateemployee = (user) => {
 }
 
 
+export const addtask = (body) => {
+    let resp = axiosInstance.post(`/task/addtask`, body);
+    return resp
+}
+

@@ -9,7 +9,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ProtectedRoutes from './components/ProtectedRoutes';
 import ProjectDetails from './components/task/[id].tsx';
 import EditProfile from './components/EditProfile';
-
+import AddTask from './components/task/AddTask';
 function App() {
   return (
     <>
@@ -33,6 +33,7 @@ function App() {
             <Route path='/dash' element={<Dash />} />
             <Route path='/task/:id' element={<ProjectDetails />} />
             <Route path='/EditProfile' element={<EditProfile />} />
+            <Route path='/task/AddTask' element={<AddTask />} />
           </Route>
           <Route path='/login' element={<Login />} />
           {/* <Route exact path='/register' element={<Register/>}/> */}

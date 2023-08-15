@@ -11,14 +11,17 @@ router.use(bodyParser.json());
 
 router.post('/register', async (req, res) => {
     const employee = req.body;
+
+
     await empcontroller.addemployee(employee).then(user => {
 
-        if (user != null) {
-            console.log("route log register", user)
-            res.status(201).json(user)
-        } else {
-            res.status(500)
-        }
+        // if (user != null) {
+        //     console.log("route log register", user)
+        //     res.status(201).json(user)
+        // } else {
+        //     res.status(500)
+        // }
+        res.status(201).json(user)
 
     }).catch(error => {
         res.status(500).json(error)

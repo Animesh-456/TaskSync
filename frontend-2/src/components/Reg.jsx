@@ -47,9 +47,10 @@ const Reg = () => {
         add(user).then(response => {
             if (response == 201) {
                 toast.success("Registered Successfully !")
-                window.location.href = '/dash'
+                window.location.href = '/login'
             } else {
                 toast.error("Email already exists!")
+                return
             }
 
         }).catch(error => {

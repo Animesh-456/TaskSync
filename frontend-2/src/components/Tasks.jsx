@@ -177,7 +177,10 @@ const Tasks = () => {
                                             <div className="text-sm text-gray-900">{task.title}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm font-bold text-yellow-500">{task.status}</div>
+                                            <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">
+                                                {task.status}
+                                            </span>
+
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <button onClick={() => { handleview(task?._id); settskid(task._id); setOpen2(true) }} className="bg-yellow-500 text-white px-4 py-2 mr-2 rounded hover:bg-yellow-600">
@@ -230,7 +233,10 @@ const Tasks = () => {
                                             <div className="text-sm text-gray-900">{task.title}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm font-bold text-green-500">{task.status}</div>
+                                            {/* <div className="text-sm font-bold text-green-500">{task.status}</div> */}
+                                            <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                                                {task.status}
+                                            </span>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <button onClick={() => { handleview(task._id); settskid(task._id); setOpen2(true) }} className="bg-yellow-500 text-white px-4 py-2 mr-2 rounded hover:bg-yellow-600">

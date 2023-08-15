@@ -16,7 +16,7 @@ import Navbar from "./Navbar";
 import updateemployee from "../controller/employee/empdetails";
 import { getUser, recentTasks } from '../api/endpoints'
 import Tasks from "./Tasks";
-
+import { AiFillFileAdd } from 'react-icons/ai'
 
 export default function Dash() {
 
@@ -186,8 +186,15 @@ export default function Dash() {
 
                 <Navbar className="bg-gray-200" />
 
+
+
                 {homestate ? (
                     <div className="container mx-auto mt-20 px-20 pt-20">
+
+                        {empdetails?.account_type == 'Assigner' && (
+                            <button onClick={() => window.location.href = '/task/AddTask'} className="flex items-center text-white px-5 h-10 bg-gradient-to-r from-red-400 to-red-500 rounded-lg mb-4"><AiFillFileAdd size={25} />Add Task</button>
+                        )}
+
                         <h1 className="text-2xl font-bold mb-4">Account Details</h1>
                         <div className="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-3">
                             <div className="w-full px-4 py-5 bg-white rounded-lg shadow">

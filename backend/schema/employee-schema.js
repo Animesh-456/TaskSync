@@ -5,7 +5,10 @@ import mongoose from 'mongoose';
 const employeeSchema = mongoose.Schema({
     fname: String,
     lname: String,
-    email: String,
+    email: {
+        unique: true,
+        type: String
+    },
     username: String,
     account_type: String,
     description: String,

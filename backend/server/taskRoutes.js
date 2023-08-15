@@ -6,6 +6,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
 router.post('/addtask', async (req, res) => {
+    console.log("body to add", req.body)
     await taskcontroller.addtask(req.body).then(result => {
         res.status(201).json(result)
     }).catch(error => {
@@ -33,7 +34,7 @@ router.get('/recent-tasks', async (req, res) => {
 })
 
 router.get('/viewtaskbyid', async (req, res) => {
-    console.log("task id is",req.query.id)
+    console.log("task id is", req.query.id)
     await taskcontroller.viewstaskByid(req.query.id).then(result => {
         res.status(201).json(result)
     }).catch(error => {
