@@ -22,12 +22,41 @@ const viewtask = async (userid, status) => {
         path: 'assignedTo assignedBy',
         select: 'fname lname email account_type',
     })
+    //console.log("controller task", tasks)
+    return tasks
+}
+
+
+const viewtasks_unassigned = async (userid) => {
+    let tasks = await task.find({ assignedTo: null, assignedBy: userid }).sort({ createdAt: -1 }).populate({
+        path: 'assignedBy',
+        select: 'fname lname email account_type',
+    })
+    //console.log("controller task", tasks)
+    return tasks
+}
+
+
+const viewtasks_assigned = async (userid) => {
+    let tasks = await task.find({ assignedTo: { $ne: null}, assignedBy: userid }).sort({ createdAt: -1 }).populate({
+        path: 'assignedBy',
+        select: 'fname lname email account_type',
+    })
     console.log("controller task", tasks)
     return tasks
 }
 
 const recent_task = async (userid) => {
     let tasks = await task.find({ assignedTo: userid }).sort({ createdAt: -1 }).limit(10).populate({
+        path: 'assignedTo assignedBy',
+        select: 'fname lname email account_type',
+    })
+    console.log("controller task", tasks)
+    return tasks
+}
+
+const recent_task_created = async (userid) => {
+    let tasks = await task.find({ assignedBy: userid }).sort({ createdAt: -1 }).limit(10).populate({
         path: 'assignedTo assignedBy',
         select: 'fname lname email account_type',
     })
@@ -88,7 +117,8 @@ const taskcontroller = {
     deletetask,
     assigntask,
     recent_task,
-    markdone
+    markdone,
+    recent_task_created,viewtasks_unassigned,viewtasks_assigned
 }
 
 

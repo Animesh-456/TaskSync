@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import empauth from '../middleware/empauth.js'
 
 import crypto from 'crypto';
+import { error } from 'console';
 const router = express.Router();
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
@@ -15,12 +16,6 @@ router.post('/register', async (req, res) => {
 
     await empcontroller.addemployee(employee).then(user => {
 
-        // if (user != null) {
-        //     console.log("route log register", user)
-        //     res.status(201).json(user)
-        // } else {
-        //     res.status(500)
-        // }
         res.status(201).json(user)
 
     }).catch(error => {
@@ -51,6 +46,15 @@ router.get('/getempdetails', empauth, async (req, res) => {
         }
         res.status(200).json(obj)
     }).catch(error => {
+        res.status(500).json(error)
+    })
+})
+
+router.get('/searchusers', async(req, res)=>{
+    await empcontroller.searchusers().then(user=>{
+        console.log("search users", user)
+        res.status(200).json(user)
+    }).catch(error=>{
         res.status(500).json(error)
     })
 })

@@ -10,6 +10,7 @@ import ProtectedRoutes from './components/ProtectedRoutes';
 import ProjectDetails from './components/task/[id].tsx';
 import EditProfile from './components/EditProfile';
 import AddTask from './components/task/AddTask';
+import Assign from './components/task/Assign';
 function App() {
   return (
     <>
@@ -34,6 +35,7 @@ function App() {
             <Route path='/task/:id' element={<ProjectDetails />} />
             <Route path='/EditProfile' element={<EditProfile />} />
             <Route path='/task/AddTask' element={<AddTask />} />
+            <Route path='/task/Assign' element={<Assign />} />
           </Route>
           <Route path='/login' element={<Login />} />
           {/* <Route exact path='/register' element={<Register/>}/> */}

@@ -74,11 +74,17 @@ const updateemployeedetails = async (emp) => {
     return result
 }
 
+const searchusers = async ()=>{
+    let result = await employee.findOne({account_type: "Employee"})
+    return result
+}
+
 const empcontroller = {
     addemployee,
     loginemployee,
     getemployeedetails,
     updateemployeedetails,
+    searchusers
 }
 
 export default empcontroller

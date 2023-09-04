@@ -14,29 +14,25 @@ import { CheckCircleIcon } from '@heroicons/react/24/outline'
 import Navbar from "./Navbar";
 
 import updateemployee from "../controller/employee/empdetails";
-import { getUser, recentTasks } from '../api/endpoints'
+import { getUser, recentTasks, createdrecentTasks } from '../api/endpoints'
 import Tasks from "./Tasks";
 import { AiFillFileAdd } from 'react-icons/ai'
+import AssignTask from "./AssignTask";
 
 export default function Dash() {
 
     const [empdetails, setempdetails] = useState([]);
     const [recenttasks, setrecenttasks] = useState([]);
+    const [createdrecent, setcreatedrecent] = useState([]);
 
 
     useEffect(() => {
         const userdata = localStorage.getItem('empdetails');
         const token = JSON.parse(userdata);
-        // auth(token).then(resp => {
-        //     console.log("resp", resp)
-        //     setempdetails(resp)
-        // })   
+       
 
         getUser(token).then(d => {
-            if (d.status == 500) {
-                localStorage.removeItem("empdetails")
-                window.location.href = "/login"
-            }
+           
             console.log("data is ", d.status)
             setempdetails(d.data)
 
@@ -52,6 +48,14 @@ export default function Dash() {
         }).catch(error => {
             toast.error(error)
         })
+
+        createdrecentTasks(token.id).then(d => {
+            if (d.status == 201) {
+                setcreatedrecent(d.data)
+            }
+        }).catch(error => {
+            toast.error(error)
+        })
     }, [])
 
 
@@ -59,9 +63,11 @@ export default function Dash() {
     const emp = JSON.parse(employee)
     const [homestate, sethomestate] = useState(true)
     const [taskstate, settaskstate] = useState(false)
+    const [assigntaskstate, setassigntaskstate] = useState(false);
     const changehomestate = () => {
         sethomestate(true)
         settaskstate(false)
+        setassigntaskstate(false);
     }
 
     const changeeditstate = () => {
@@ -72,6 +78,12 @@ export default function Dash() {
     const changetaskstate = () => {
         settaskstate(true)
         sethomestate(false)
+    }
+
+
+    const changetaskstate2 = () => {
+        setassigntaskstate(true);
+        sethomestate(false);
     }
 
     let edit = localStorage.getItem("empdetails")
@@ -148,16 +160,38 @@ export default function Dash() {
                                         <span className="">Home</span>
                                     </a>
                                 </li>
-                                <li className="mt-10 pt-5 hover:text-red-500">
-                                    <a
-                                        style={{ cursor: "pointer" }}
-                                        className="flex items-center p-2 space-x-3 rounded-md"
-                                        onClick={changetaskstate}
-                                    >
-                                        <BsListTask size={20} className="ml-1" />
-                                        <span>My Tasks</span>
-                                    </a>
-                                </li>
+
+
+                                {empdetails?.account_type == "Assigner" ? (
+
+                                    <>
+                                        <li className="mt-10 pt-5 hover:text-red-500">
+                                            <a
+                                                style={{ cursor: "pointer" }}
+                                                className="flex items-center p-2 space-x-3 rounded-md"
+                                                onClick={changetaskstate2}
+                                            >
+                                                <BsListTask size={20} className="ml-1" />
+                                                <span>Assign Tasks</span>
+                                            </a>
+                                        </li>
+                                    </>
+
+                                ) : (
+                                    <li className="mt-10 pt-5 hover:text-red-500">
+                                        <a
+                                            style={{ cursor: "pointer" }}
+                                            className="flex items-center p-2 space-x-3 rounded-md"
+                                            onClick={changetaskstate}
+                                        >
+                                            <BsListTask size={20} className="ml-1" />
+                                            <span>My Tasks</span>
+                                        </a>
+                                    </li>
+                                )}
+
+
+
                                 {/* <li className="mt-10 pt-5 hover:text-red-500">
                                     <a
                                         style={{ cursor: "pointer" }}
@@ -225,28 +259,54 @@ export default function Dash() {
 
                         <h1 className="text-2xl font-bold mb-4">Recent Activity</h1>
                         <div className="bg-white p-4 rounded shadow">
-                            {/* <h2 className="text-xl font-bold mb-4">Task List</h2> */}
-                            {recenttasks.length > 0 ? (
-                                <ul className="space-y-4">
-                                    {recenttasks.length && recenttasks.map((task) => (
-                                        <li
-                                            key={task.id}
-                                            className="flex items-center justify-between rounded"
-                                        >
-                                            <span className="font-bold">{task.title}</span>
-                                            <span>{task.description}</span>
-                                            <span>{task.createdAt}</span>
-                                        </li>
-                                    )).slice(0, 3)}
-                                </ul>
+
+                            {empdetails?.account_type == "Assigner" ? (
+                                createdrecent.length > 0 ? (
+                                    <ul className="space-y-4">
+                                        {createdrecent.length && createdrecent.map((task) => (
+                                            <li
+                                                key={task.id}
+                                                className="flex items-center justify-between rounded"
+                                            >
+                                                <span className="font-bold">{task.title}</span>
+                                                <span>{task.description}</span>
+                                                <span>{task.createdAt}</span>
+                                            </li>
+                                        )).slice(0, 3)}
+                                    </ul>
+                                ) : (
+                                    <p className="text-gray-500">No tasks found.</p>
+                                )
                             ) : (
-                                <p className="text-gray-500">No tasks found.</p>
+
+                                recenttasks.length > 0 ? (
+                                    <ul className="space-y-4">
+                                        {recenttasks.length && recenttasks.map((task) => (
+                                            <li
+                                                key={task.id}
+                                                className="flex items-center justify-between rounded"
+                                            >
+                                                <span className="font-bold">{task.title}</span>
+                                                <span>{task.description}</span>
+                                                <span>{task.createdAt}</span>
+                                            </li>
+                                        )).slice(0, 3)}
+                                    </ul>
+                                ) : (
+                                    <p className="text-gray-500">No tasks found.</p>
+                                )
+
                             )}
+
+                            {/* <h2 className="text-xl font-bold mb-4">Task List</h2> */}
+
                         </div>
                     </div>
                 ) : (<></>)}
 
                 {taskstate ? <Tasks /> : <></>}
+
+                {assigntaskstate ? <AssignTask /> : <></>}
 
 
 
