@@ -51,7 +51,8 @@ router.get('/getempdetails', empauth, async (req, res) => {
 })
 
 router.get('/searchusers', async(req, res)=>{
-    await empcontroller.searchusers().then(user=>{
+    console.log("The search body is",req.query?.q)
+    await empcontroller.searchusers(req.query?.q).then(user=>{
         console.log("search users", user)
         res.status(200).json(user)
     }).catch(error=>{

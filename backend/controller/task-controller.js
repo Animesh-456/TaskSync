@@ -38,7 +38,7 @@ const viewtasks_unassigned = async (userid) => {
 
 
 const viewtasks_assigned = async (userid) => {
-    let tasks = await task.find({ assignedTo: { $ne: null}, assignedBy: userid }).sort({ createdAt: -1 }).populate({
+    let tasks = await task.find({ assignedTo: { $ne: null }, assignedBy: userid }).sort({ createdAt: -1 }).populate({
         path: 'assignedBy',
         select: 'fname lname email account_type',
     })
@@ -99,13 +99,13 @@ const deletetask = async (tk) => {
 }
 
 const assigntask = async (tk) => {
-    let result = await task.findByIdAndUpdate({ _id: tk.id }, { assignedTo: tk.assignedTo }, { new: true })
+    let result = await task.findByIdAndUpdate({ _id: tk.id.toString() }, { assignedTo: tk.assignedTo.toString() }, { new: true })
     let mailtosend = await employee.findOne({ _id: result.assignedTo })
     let mailfrom = await employee.findOne({ _id: result.assignedBy })
-    let mail = assignTask(mailtosend.fname, result._id, result.title, result.description, mailfrom.fname)
+    let mail = await assignTask(mailtosend.fname, result._id, result.title, result.description, mailfrom.fname)
     const subject = mail.subject
     const text = mail.body
-    sendmail(mailtosend.email, subject, text)
+    await sendmail(mailtosend.email, subject, text)
     return result
 }
 
@@ -118,7 +118,7 @@ const taskcontroller = {
     assigntask,
     recent_task,
     markdone,
-    recent_task_created,viewtasks_unassigned,viewtasks_assigned
+    recent_task_created, viewtasks_unassigned, viewtasks_assigned
 }
 
 

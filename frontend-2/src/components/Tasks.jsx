@@ -111,11 +111,18 @@ const Tasks = () => {
         })
     }
 
+    const handleselect = (e) => {
+        const value = e.target.value;
+        setactivelink(value);
+
+
+    }
+
 
     return (
 
-        <div class="w-full py-20 px-10 mx-auto">
-            <nav className="bg-gray-50 mt-5 w-1/4">
+        <div class="w-full py-20 px-1 mx-auto">
+            {/* <nav className="bg-gray-50 mt-5 w-1/4">
                 <div className="container mx-auto py-4 flex justify-between">
                     <div>
                         <a
@@ -140,7 +147,16 @@ const Tasks = () => {
                         </a>
                     </div>
                 </div>
-            </nav>
+            </nav> */}
+
+            <h2 className='text-xl text-gray-800 font-bold pl-5'>Filter results</h2>
+
+            <div className='px-4 py-5'>
+                <select onChange={handleselect} value={activeLink} className='w-full md:w-1/4 px-2 py-2' name="" id="">
+                    <option value="pending">Pending</option>
+                    <option value="complete">Complete</option>
+                </select>
+            </div>
 
             {activeLink === 'pending' ? (
                 <div className="container mx-auto p-4">

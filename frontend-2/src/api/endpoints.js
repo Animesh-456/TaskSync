@@ -113,8 +113,16 @@ export const addtask = (body) => {
 }
 
 
-export const searchusers = async()=>{
-    let resp = await axiosInstance.get('/searchusers');
+export const searchusers = async (user) => {
+
+    console.log("frontend search querry", user)
+    let resp = await axiosInstance.get(`/searchusers/?q=${user}`);
+    return resp
+}
+
+
+export const assignTask = (a, b) => {
+    let resp = axiosInstance.post(`/task/assigntask`, { id: a, assignedTo: b });
     return resp
 }
 

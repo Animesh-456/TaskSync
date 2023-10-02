@@ -11,6 +11,7 @@ import ProjectDetails from './components/task/[id].tsx';
 import EditProfile from './components/EditProfile';
 import AddTask from './components/task/AddTask';
 import Assign from './components/task/Assign';
+import Newdash from './components/Newdash';
 function App() {
   return (
     <>
@@ -36,6 +37,7 @@ function App() {
             <Route path='/EditProfile' element={<EditProfile />} />
             <Route path='/task/AddTask' element={<AddTask />} />
             <Route path='/task/Assign' element={<Assign />} />
+            <Route path='/Newdash' element={<Newdash />} />
           </Route>
           <Route path='/login' element={<Login />} />
           {/* <Route exact path='/register' element={<Register/>}/> */}

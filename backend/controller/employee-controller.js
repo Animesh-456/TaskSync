@@ -19,7 +19,7 @@ const addemployee = async (emp) => {
         email: emp.email,
         account_type: emp.account_type,
         username: emp.username,
-        description : "",
+        description: "",
         password: ""
     }
     await bcrypt.hash(emp.password, 10).then(async function (hash) {
@@ -74,9 +74,25 @@ const updateemployeedetails = async (emp) => {
     return result
 }
 
-const searchusers = async ()=>{
-    let result = await employee.findOne({account_type: "Employee"})
-    return result
+const searchusers = async (q) => {
+
+    if (q?.includes(" ")) {
+        let str = q?.split(" ");
+        let fname = str[0];
+        let lname = str[1];
+        let result = await employee.find({
+            account_type: "Employee",
+            fname: fname?.charAt(0).toUpperCase() + fname.slice(1),
+            lname: lname?.charAt(0).toUpperCase() + lname.slice(1),
+        })
+        return result
+    } else {
+        let result = await employee.find({
+            account_type: "Employee",
+            fname: q?.charAt(0).toUpperCase() + q.slice(1)
+        })
+        return result
+    }
 }
 
 const empcontroller = {

@@ -17,7 +17,9 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { StarIcon } from '@heroicons/react/20/solid'
 import { PaperClipIcon } from '@heroicons/react/20/solid'
 import Assign from './task/Assign';
-
+import SearchBar from './SearchBar';
+import maleavatar from '../assets/male-avatar.svg'
+import { assignTask } from '../api/endpoints';
 const AssignTask = () => {
 
     const product = {
@@ -123,71 +125,73 @@ const AssignTask = () => {
 
 
 
-    const handleSearch = (e) => {
-        const searchQuery = e.target.value.toLowerCase();
 
-        // Filter users based on the search query
-        const filtered = users.filter((user) =>
-            user.username.toLowerCase().includes(searchQuery)
-        );
-
-        setFilteredUsers(filtered);
-    };
 
 
     const [assignedTo, setAssignedTo] = useState('');
-    const [users, setUsers] = useState([]);
+
     const [filteredUsers, setFilteredUsers] = useState([]);
 
+    const [searchdiv, setsearchdiv] = useState(true);
 
+
+
+
+
+
+    const handleselect = (e) => {
+        const value = e.target.value;
+        setactivelink(value);
+
+
+    }
+
+
+    const [query, setQuery] = useState("");
+
+    const handleSubmit = () => {
+        //e.preventDefault();
+
+        //toast.success(assignedTo)
+        assignTask(assignedTo, tskid).then(d => {
+            toast.success(`Task Assigned to ${query}`)
+            setOpen3(false)
+        }).catch(error => {
+            toast.error(error)
+        })
+        //onSearch(query);
+    };
 
     useEffect(() => {
         // Fetch the list of users from the backend
-        searchusers()
+        searchusers(query)
             .then((data) => {
-                setUsers(data.data);
-                setFilteredUsers(data.data); // Initially, set filtered users to all users
+
+                setFilteredUsers(data.data);
+                setsearchdiv(true) // Initially, set filtered users to all users
             })
             .catch((error) => console.error(error));
-    }, []);
+    }, [query]);
 
     console.log("filtered users are: -", filteredUsers)
 
-
-
     return (
 
-        <div class="w-full py-20 px-10 mx-auto">
-            <nav className="bg-gray-50 mt-5 w-1/4">
-                <div className="container mx-auto py-4 flex justify-between">
-                    <div>
-                        <a
-                            href="#"
-                            className={`${activeLink === 'unassigned'
-                                ? 'text-red-500 border-b-2 border-red-500'
-                                : 'text-gray-500 hover:text-red-500'
-                                } px-3 py-2 text-md font-medium `}
-                            onClick={() => setactivelink('unassigned')}
-                        >
-                            Unassigned Tasks
-                        </a>
-                        <a
-                            href="#"
-                            className={`${activeLink === 'assigned'
-                                ? 'text-red-500 border-b-2 border-red-500'
-                                : 'text-gray-500 hover:text-red-500'
-                                } px-3 py-2 text-md font-medium`}
-                            onClick={() => setactivelink('assigned')}
-                        >
-                            Assigned Tasks
-                        </a>
-                    </div>
-                </div>
-            </nav>
+        <div class="w-full py-20 px-1 mx-auto">
+
+
+            <h2 className='text-xl text-gray-800 font-bold pl-5'>Filter results</h2>
+
+            <div className='px-4 py-5'>
+                <select onChange={handleselect} value={activeLink} className='w-full md:w-1/4 px-2 py-2' name="" id="">
+                    <option value="unassigned">Unassigned</option>
+                    <option value="assigned">Assigned</option>
+                </select>
+            </div>
 
             {activeLink === 'unassigned' ? (
-                <div className="container mx-auto p-4">
-                    {task.length ? (<h1 className="text-2xl font-bold mb-4">Unassigned Task List</h1>) : (<h1 className="text-2xl font-bold mb-4">No Tasks yet</h1>)}
+                <div className="container mx-auto py-4">
+                    {task.length ? (<h1 className="text-2xl font-bold mb-4 pl-5">Unassigned Task List</h1>) : (<h1 className="text-2xl font-bold mb-4">No Tasks yet</h1>)}
 
                     <div className="bg-white shadow overflow-x-auto sm:rounded-lg">
                         <table className="min-w-full divide-y divide-gray-200">
@@ -540,11 +544,61 @@ const AssignTask = () => {
                                                         </dd>
                                                     </div>
 
+
+
                                                     <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                                                         <dt className="text-sm font-medium leading-6 text-gray-900">Assign To</dt>
-                                                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{filteredUsers?.length && filteredUsers?.map((f) => {
-                                                            <h3>{f?.fname}</h3>
-                                                        })}</dd>
+                                                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                                            <div>
+                                                                <form onSubmit={handleSubmit}>
+                                                                    <input
+                                                                        className="px-5 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset  sm:text-sm sm:leading-6"
+                                                                        type="text"
+                                                                        placeholder="Search for users..."
+                                                                        value={query}
+                                                                        onChange={(e) => setQuery(e.target.value)}
+                                                                    />
+
+
+
+
+                                                                    <div className="relative w-full pb-2">
+
+                                                                        {searchdiv ? (
+
+                                                                            <ul class="absolute z-10 mt-1  w-full rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm" tabindex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-option-3">
+
+                                                                                {filteredUsers?.map((user) => (
+
+                                                                                    <li class="text-gray-900 relative cursor-pointer py-2 pl-3 pr-9" id="listbox-option-0" role="option" onClick={() => { setsearchdiv(false); setAssignedTo(user?._id); setQuery(user?.fname) }}>
+                                                                                        <div className="flex items-center">
+                                                                                            <img src={maleavatar} alt="" class="h-10 w-10 flex-shrink-0 rounded-full" />
+                                                                                            <span className="font-normal ml-3 block truncate">{user?.fname} {user?.lname}</span>
+                                                                                        </div>
+                                                                                        <span className="font-normal text-gray-500 ml-5 pl-5 block truncate">{user?.email}</span>
+                                                                                    </li>
+
+                                                                                ))}
+
+
+                                                                            </ul>
+                                                                        ) : (<></>)}
+
+
+                                                                    </div>
+
+
+                                                                </form>
+                                                            </div>
+                                                        </dd>
+                                                    </div>
+                                                    <br></br>
+
+                                                    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                                        <dt className="text-sm font-medium leading-6 text-gray-900">
+                                                            <button className='bg-red-500 rounded-md text-white px-2 py-2 w-full' onClick={handleSubmit}>Assign</button>
+                                                        </dt>
+
                                                     </div>
                                                 </dl>
                                             </div>
