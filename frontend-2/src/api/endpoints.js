@@ -122,7 +122,7 @@ export const searchusers = async (user) => {
 
 
 export const assignTask = (a, b) => {
-    let resp = axiosInstance.post(`/task/assigntask`, { id: a, assignedTo: b });
+    let resp = axiosInstance.post(`/task/assigntask`, { id: b, assignedTo: a });
     return resp
 }
 
