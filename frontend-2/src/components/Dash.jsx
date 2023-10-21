@@ -307,7 +307,7 @@ const Newdash = () => {
                                 </div>
                                 <ul class="py-8 pb-5">
                                     <li><a
-                                        //onClick={logout}
+                                        href="/EditProfile"
                                         className="flex items-center p-2 space-x-3 hover:bg-gray-200"
                                         style={{ cursor: "pointer" }}
                                     >
@@ -323,10 +323,10 @@ const Newdash = () => {
                                         <span>Settings</span>
                                     </a></li>
                                     <li><a
-                                        //onClick={logout}
+                                        onClick={logout}
                                         className="flex items-center p-2 space-x-3 hover:bg-gray-200"
                                         style={{ cursor: "pointer" }}
-                                        onClick={logout}
+
                                     >
                                         <BiLogOut size={20} className="ml-1 text-red-500" />
                                         <span>Logout</span>
